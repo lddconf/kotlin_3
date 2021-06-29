@@ -1,4 +1,4 @@
-package com.example.dictionary.mvp.data
+package com.example.dictionary.mvp.model.data
 
 sealed class AppState {
     data class Success(val data: List<DataModel>?) : AppState()

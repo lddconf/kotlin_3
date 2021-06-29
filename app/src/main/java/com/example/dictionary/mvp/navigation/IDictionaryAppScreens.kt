@@ -1,7 +1,7 @@
-package com.example.foodviewer.mvp.navigation
+package com.example.dictionary.mvp.navigation
 
 import com.github.terrakok.cicerone.Screen
 
 interface IDictionaryAppScreens {
-    fun mainWindow(): Screen
+    fun searchResultsWindow(): Screen
 }

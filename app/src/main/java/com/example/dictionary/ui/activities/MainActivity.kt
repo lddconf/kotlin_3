@@ -3,14 +3,7 @@ package com.example.dictionary.ui.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import com.example.dictionary.App
 import com.example.dictionary.R
 import com.example.dictionary.databinding.ActivityMainBinding
@@ -23,6 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     private val navigationHolder: NavigatorHolder = App.instance.navigatorHolder
     private val navigator = AppNavigator(this, R.id.container)
+    private val screens = AndroidAppScreens()
 
     companion object {
         fun getInstanceIntent(context: Context) = Intent(context, MainActivity::class.java)
@@ -33,8 +27,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        App.instance.router.replaceScreen(AndroidAppScreens().mainWindow())
+        initBaseView()
+    }
 
+    fun initBaseView() {
+        App.instance.router.replaceScreen(screens.searchResultsWindow())
     }
 
     override fun onResumeFragments() {
