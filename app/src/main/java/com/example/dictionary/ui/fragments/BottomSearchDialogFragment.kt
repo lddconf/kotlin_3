@@ -7,9 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.dictionary.databinding.FragmentSearchDialogBinding
-import com.example.dictionary.ui.navigation.AndroidAppScreens
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import geekbrains.ru.translator.utils.getEmptyString
+import com.example.dictionary.utils.getEmptyString
 
 class BottomSearchDialogFragment : BottomSheetDialogFragment() {
     private var vb: FragmentSearchDialogBinding? = null
