@@ -27,7 +27,7 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
     private val router = App.instance.router
     private val screens = AndroidAppScreens()
 
-    private lateinit var presenter : WordsDetailsFragmentPresenter
+    private lateinit var presenter: WordsDetailsFragmentPresenter
     private var adapter: ResultListRVAdapter? = null
     private val onListItemClickListener: ResultListRVAdapter.OnListItemClickListener =
         object : ResultListRVAdapter.OnListItemClickListener {
@@ -110,13 +110,13 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
         showViewLoading()
         progress?.let {
             vb?.apply {
-//                progress_bar_horizontal.visibility = View.VISIBLE
-//                progress_bar_round.visibility = View.GONE
-//                progress_bar_horizontal.progress = progress
+                progressBarHorizontal.visibility = View.VISIBLE
+                progressBarRound.visibility = View.GONE
+                progressBarHorizontal.progress = progress
             }
         } ?: vb?.apply {
-//            progress_bar_horizontal.visibility = View.GONE
-//            progress_bar_round.visibility = View.VISIBLE
+            progressBarHorizontal.visibility = View.GONE
+            progressBarRound.visibility = View.VISIBLE
         }
     }
 
@@ -136,20 +136,20 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
 
     private fun showViewSuccess() = vb?.apply {
         successLayout.visibility = View.VISIBLE
-//        loading_frame_layout.visibility = View.GONE
+        loadingFrameLayout.visibility = View.GONE
         errorLinearLayout.visibility = View.GONE
     }
 
 
     private fun showViewLoading() = vb?.apply {
         successLayout.visibility = View.GONE
-//        loading_frame_layout.visibility = View.VISIBLE
+        loadingFrameLayout.visibility = View.VISIBLE
         errorLinearLayout.visibility = View.GONE
     }
 
     private fun showViewError() = vb?.apply {
         successLayout.visibility = View.GONE
-//        loading_frame_layout.visibility = View.GONE
+        loadingFrameLayout.visibility = View.GONE
         errorLinearLayout.visibility = View.VISIBLE
     }
 }
