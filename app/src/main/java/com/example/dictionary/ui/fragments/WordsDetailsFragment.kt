@@ -1,15 +1,15 @@
 package com.example.dictionary.ui.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dictionary.App
 import com.example.dictionary.R
 import com.example.dictionary.databinding.FragmentWordsDetailsBinding
-import com.example.dictionary.mvp.model.data.DataModel
 import com.example.dictionary.mvp.presenter.Presenter
 import com.example.dictionary.mvp.presenter.WordsDetailsFragmentPresenter
 import com.example.dictionary.mvp.views.IWordsDetailsView
@@ -18,9 +18,7 @@ import com.example.dictionary.ui.base.BaseFragment
 import com.example.dictionary.ui.navigation.AndroidAppScreens
 import geekbrains.ru.translator.rx.SchedulerProvider
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
+
 class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsView {
     private var vb: FragmentWordsDetailsBinding? = null
 
@@ -29,12 +27,6 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
 
     private lateinit var presenter: WordsDetailsFragmentPresenter
     private var adapter: ResultListRVAdapter? = null
-    private val onListItemClickListener: ResultListRVAdapter.OnListItemClickListener =
-        object : ResultListRVAdapter.OnListItemClickListener {
-            override fun onItemClick(data: DataModel) {
-                Toast.makeText(requireContext(), data.text, Toast.LENGTH_SHORT).show()
-            }
-        }
 
     companion object {
         private const val BOTTOM_SHEET_FRAGMENT_DIALOG_TAG =
@@ -55,6 +47,7 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
         super.onViewCreated(view, savedInstanceState)
         initAppBar()
         initSearchFAB()
+        initRV()
     }
 
     override fun createPresenter(): Presenter<IWordsDetailsView> =
@@ -62,6 +55,9 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
             presenter = it
         }
 
+    override fun showMessage(text: String) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -75,9 +71,13 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
 
     private fun initSearchFAB() {
         vb?.searchFab?.setOnClickListener {
-            //App.instance.router.navigateTo(screens.searchWindow())
             showWordSearchDialog()
         }
+    }
+
+    private fun initRV() {
+        vb?.resultListRv?.layoutManager = LinearLayoutManager(requireContext())
+        vb?.resultListRv?.adapter = ResultListRVAdapter(presenter.wordsListPresenter)
     }
 
     private fun showWordSearchDialog() {
@@ -94,16 +94,13 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
         )
     }
 
-    override fun showWords(words: List<DataModel>) {
-        if (words.isEmpty()) {
+    override fun wordsListChanged(words: Int) {
+        if (words == 0) {
             showErrorScreen(getString(R.string.empty_server_response_on_success))
         } else {
             showViewSuccess()
-            adapter?.setData(words) ?: vb?.apply {
-                resultListRv.layoutManager = LinearLayoutManager(requireContext())
-                resultListRv.adapter = ResultListRVAdapter(onListItemClickListener, words)
-            }
         }
+        adapter?.notifyDataSetChanged()
     }
 
     override fun showLoading(progress: Int?) {

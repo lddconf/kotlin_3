@@ -5,14 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dictionary.databinding.FragmentSearchResultListRvItemBinding
 import com.example.dictionary.mvp.model.data.DataModel
+import com.example.dictionary.mvp.presenter.list.IWordDetails
+import com.example.dictionary.mvp.presenter.list.IWordsDetailsListPresenter
 
-class ResultListRVAdapter(private var onListItemClickListener: OnListItemClickListener, private var data: List<DataModel>) :
+class ResultListRVAdapter(
+    val presenter: IWordsDetailsListPresenter
+) :
     RecyclerView.Adapter<ResultListRVAdapter.RecyclerItemViewHolder>() {
-
-    fun setData(data: List<DataModel>) {
-        this.data = data
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerItemViewHolder =
         RecyclerItemViewHolder(
@@ -21,34 +20,34 @@ class ResultListRVAdapter(private var onListItemClickListener: OnListItemClickLi
                 parent,
                 false
             )
-        )
-
+        ).apply {
+            itemView.setOnClickListener {
+                presenter.itemClickListener?.invoke(this)
+            }
+        }
 
     override fun onBindViewHolder(holder: RecyclerItemViewHolder, position: Int) {
-        holder.bind(data.get(position))
+        presenter.bindView(holder.apply {
+            pos = position
+        })
     }
 
     override fun getItemCount(): Int {
-        return data.size
+        return presenter.getCount()
     }
 
-    inner class RecyclerItemViewHolder(val vb: FragmentSearchResultListRvItemBinding) : RecyclerView.ViewHolder(vb.root) {
-        fun bind(data: DataModel) {
-            if (layoutPosition != RecyclerView.NO_POSITION) {
-                with(vb) {
-                    headerTextviewRecyclerItem.text = data.text
-                    descriptionTextviewRecyclerItem.text = data.meanings?.get(0)?.translation?.translation
-                }
-                itemView.setOnClickListener { openInNewWindow(data) }
-            }
+    inner class RecyclerItemViewHolder(val vb: FragmentSearchResultListRvItemBinding) :
+        RecyclerView.ViewHolder(vb.root),
+        IWordDetails {
+
+        override var pos: Int = -1
+
+        override fun headerText(text: String) = with(vb) {
+            headerTextviewRecyclerItem.text = text
         }
-    }
 
-    private fun openInNewWindow(listItemData: DataModel) {
-        onListItemClickListener.onItemClick(listItemData)
-    }
-
-    interface OnListItemClickListener {
-        fun onItemClick(data: DataModel)
+        override fun descriptionText(text: String) = with(vb) {
+            descriptionTextviewRecyclerItem.text = text
+        }
     }
 }

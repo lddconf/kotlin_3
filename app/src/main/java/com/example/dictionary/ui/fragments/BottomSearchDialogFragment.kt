@@ -13,7 +13,6 @@ import geekbrains.ru.translator.utils.getEmptyString
 
 class BottomSearchDialogFragment : BottomSheetDialogFragment() {
     private var vb: FragmentSearchDialogBinding? = null
-    private val screens = AndroidAppScreens()
     private var onSearchClickListener: OnSearchClickListener? = null
 
     private val textWatcher = object : TextWatcher {
@@ -51,9 +50,6 @@ class BottomSearchDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
         fun newInstance() = BottomSearchDialogFragment()
-        fun newInstance(listener: OnSearchClickListener) = BottomSearchDialogFragment().apply {
-            setOnSearchClickListener(listener)
-        }
     }
 
     override fun onCreateView(
