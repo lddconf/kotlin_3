@@ -1,6 +1,5 @@
 package com.example.dictionary.mvp.interactors
 
-import com.example.dictionary.mvp.model.data.AppState
 import com.example.dictionary.mvp.model.data.DataModel
 import com.example.dictionary.mvp.model.repository.Repository
 import com.example.dictionary.mvp.presenter.Interactor

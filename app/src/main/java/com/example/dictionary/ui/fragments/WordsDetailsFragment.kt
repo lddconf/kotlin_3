@@ -94,8 +94,8 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
         )
     }
 
-    override fun wordsListChanged(words: Int) {
-        if (words == 0) {
+    override fun wordsListChanged(size: Int) {
+        if (size == 0) {
             showErrorScreen(getString(R.string.empty_server_response_on_success))
         } else {
             showViewSuccess()
