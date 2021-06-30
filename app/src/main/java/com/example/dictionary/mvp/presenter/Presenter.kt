@@ -1,14 +1,21 @@
 package com.example.dictionary.mvp.presenter
 
-import com.example.dictionary.mvp.model.data.AppState
-import geekbrains.ru.translator.view.base.View
+import com.example.dictionary.ui.base.IView
 
 
-interface Presenter<T, V : View> {
+open class Presenter<V : IView> {
+    var currentView: V? = null
+    private set
 
-    fun attachView(view: V)
+    open fun attachView(view: V) {
+        if (view != currentView) {
+            currentView = view
+        }
+    }
 
-    fun detachView(view: V)
-
-    fun getData(word: String, isOnline: Boolean)
+    open fun detachView(view: V) {
+        if (view == currentView) {
+            currentView = null
+        }
+    }
 }

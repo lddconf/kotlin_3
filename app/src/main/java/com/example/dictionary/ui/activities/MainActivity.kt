@@ -3,20 +3,24 @@ package com.example.dictionary.ui.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.example.dictionary.App
 import com.example.dictionary.R
 import com.example.dictionary.databinding.ActivityMainBinding
+import com.example.dictionary.mvp.presenter.MainActivityPresenter
+import com.example.dictionary.mvp.presenter.Presenter
+import com.example.dictionary.mvp.views.IMainView
+import com.example.dictionary.ui.base.BaseActivity
 import com.example.dictionary.ui.navigation.AndroidAppScreens
-import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
+import geekbrains.ru.translator.rx.SchedulerProvider
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<IMainView>(), IMainView {
     private lateinit var binding: ActivityMainBinding
 
-    private val navigationHolder: NavigatorHolder = App.instance.navigatorHolder
+    private val navigationHolder = App.instance.navigatorHolder
     private val navigator = AppNavigator(this, R.id.container)
     private val screens = AndroidAppScreens()
+    private val router = App.instance.router
 
     companion object {
         fun getInstanceIntent(context: Context) = Intent(context, MainActivity::class.java)
@@ -26,13 +30,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        initBaseView()
     }
 
-    fun initBaseView() {
-        App.instance.router.replaceScreen(screens.searchResultsWindow())
-    }
 
     override fun onResumeFragments() {
         super.onResumeFragments()
@@ -43,4 +42,7 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         navigationHolder.removeNavigator()
     }
+
+    override fun createPresenter(): Presenter<IMainView> =
+        MainActivityPresenter(router, screens)
 }
