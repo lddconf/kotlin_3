@@ -12,12 +12,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Dictionary">
+        android:theme="@style/DictionaryTheme">
         <activity
             android:name=".ui.activities.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Dictionary.NoActionBar">
+            android:theme="@style/DictionaryTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

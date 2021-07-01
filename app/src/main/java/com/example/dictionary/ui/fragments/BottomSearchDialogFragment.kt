@@ -19,10 +19,10 @@ class BottomSearchDialogFragment : BottomSheetDialogFragment() {
             vb?.apply {
                 if (searchEditText.text != null && !searchEditText.text.toString().isEmpty()) {
                     searchButtonTextView.isEnabled = true
-                    clearTextImageView.visibility = View.VISIBLE
+                    clearTextImageview.visibility = View.VISIBLE
                 } else {
                     searchButtonTextView.isEnabled = false
-                    clearTextImageView.visibility = View.GONE
+                    clearTextImageview.visibility = View.GONE
                 }
             }
         }
@@ -69,7 +69,7 @@ class BottomSearchDialogFragment : BottomSheetDialogFragment() {
 
     private fun addOnClearClickListener() {
         vb?.apply {
-            clearTextImageView.setOnClickListener {
+            clearTextImageview.setOnClickListener {
                 searchEditText.setText(String.getEmptyString())
                 searchButtonTextView.isEnabled = false
             }

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Dictionary" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="DictionaryTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -14,20 +14,18 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
-
         <!-- Customize your theme here. -->
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
-        <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
-    <style name="Theme.Dictionary.NoActionBar">
+    <style name="DictionaryTheme.NoActionBar" parent="DictionaryTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Dictionary.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Dictionary.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
-    <style name="Theme.Dictionary.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Dictionary.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
     <style name="BaseTextStyle" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:textColor">@color/color_text_main</item>

@@ -77,7 +77,8 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
 
     private fun initRV() {
         vb?.resultListRv?.layoutManager = LinearLayoutManager(requireContext())
-        vb?.resultListRv?.adapter = ResultListRVAdapter(presenter.wordsListPresenter)
+        adapter = ResultListRVAdapter(presenter.wordsListPresenter)
+        vb?.resultListRv?.adapter = adapter
     }
 
     private fun showWordSearchDialog() {
@@ -98,9 +99,9 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
         if (size == 0) {
             showErrorScreen(getString(R.string.empty_server_response_on_success))
         } else {
+            adapter?.apply { notifyDataSetChanged() }
             showViewSuccess()
         }
-        adapter?.notifyDataSetChanged()
     }
 
     override fun showLoading(progress: Int?) {

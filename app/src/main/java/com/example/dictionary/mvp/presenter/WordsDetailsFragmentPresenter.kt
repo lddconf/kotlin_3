@@ -75,6 +75,7 @@ class WordsDetailsFragmentPresenter(
             }
 
             override fun onError(e: Throwable) {
+                wordsListPresenter.words.clear()
                 currentView?.showError(e)
             }
 
