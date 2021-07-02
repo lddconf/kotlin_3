@@ -6,6 +6,8 @@ import android.os.Bundle
 import com.example.dictionary.App
 import com.example.dictionary.R
 import com.example.dictionary.databinding.ActivityMainBinding
+import com.example.dictionary.mvp.model.data.ScreenData
+import com.example.dictionary.mvp.model.data.Success
 import com.example.dictionary.mvp.presenter.MainActivityPresenter
 import com.example.dictionary.mvp.presenter.Presenter
 import com.example.dictionary.mvp.views.IMainView
@@ -14,7 +16,7 @@ import com.example.dictionary.ui.navigation.AndroidAppScreens
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import geekbrains.ru.translator.rx.SchedulerProvider
 
-class MainActivity : BaseActivity<IMainView>(), IMainView {
+class MainActivity : BaseActivity<ScreenData>() {
     private lateinit var binding: ActivityMainBinding
 
     private val navigationHolder = App.instance.navigatorHolder
@@ -43,6 +45,10 @@ class MainActivity : BaseActivity<IMainView>(), IMainView {
         navigationHolder.removeNavigator()
     }
 
-    override fun createPresenter(): Presenter<IMainView> =
-        MainActivityPresenter(router, screens)
+    override fun renderData(data: ScreenData) {
+        when(data) {
+            is Success<*> -> router.navigateTo(screens.searchResultsWindow())
+            else -> return
+        }
+    }
 }

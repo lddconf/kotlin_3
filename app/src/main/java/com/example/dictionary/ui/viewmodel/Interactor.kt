@@ -1,4 +1,4 @@
-package com.example.dictionary.mvp.presenter
+package com.example.dictionary.ui.viewmodel
 
 import io.reactivex.rxjava3.core.Observable
 

@@ -2,7 +2,7 @@ package com.example.dictionary.mvp.interactors
 
 import com.example.dictionary.mvp.model.data.DataModel
 import com.example.dictionary.mvp.model.repository.Repository
-import com.example.dictionary.mvp.presenter.Interactor
+import com.example.dictionary.ui.viewmodel.Interactor
 import io.reactivex.rxjava3.core.Observable
 
 class WordsDetailsInteractor(

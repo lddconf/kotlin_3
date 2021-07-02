@@ -2,26 +2,18 @@ package com.example.dictionary.ui.base
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import com.example.dictionary.mvp.model.data.ScreenData
 import com.example.dictionary.mvp.presenter.Presenter
+import com.example.dictionary.ui.viewmodel.BaseViewModel
 
-abstract class BaseActivity<V : IView> : AppCompatActivity(), IView {
+abstract class BaseActivity<S : ScreenData, VM : BaseViewModel<S>> : AppCompatActivity() {
 
-    protected lateinit var presenter: Presenter<V>
-
-    protected abstract fun createPresenter(): Presenter<V>
+    protected lateinit var viewModel: VM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter = createPresenter()
     }
 
-    override fun onStart() {
-        super.onStart()
-        presenter.attachView(this as V)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        presenter.detachView(this as V)
-    }
+    abstract fun renderData( data : S )
 }
