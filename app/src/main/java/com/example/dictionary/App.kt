@@ -1,8 +1,9 @@
 package com.example.dictionary
 
 import android.app.Application
-import com.github.terrakok.cicerone.Cicerone
-import com.github.terrakok.cicerone.Router
+import com.example.dictionary.di.AppModule
+import geekbrains.ru.translator.di.AppComponent
+import geekbrains.ru.translator.di.DaggerAppComponent
 
 class App : Application() {
     companion object {
@@ -10,18 +11,24 @@ class App : Application() {
             private set
     }
 
-    private val cicerone: Cicerone<Router> by lazy {
-        Cicerone.create()
-    }
+    lateinit var appComponent: AppComponent
 
-    val navigatorHolder
-        get() = cicerone.getNavigatorHolder()
-
-    val router
-        get() = cicerone.router
+//    private val cicerone: Cicerone<Router> by lazy {
+//        Cicerone.create()
+//    }
+//
+//    val navigatorHolder
+//        get() = cicerone.getNavigatorHolder()
+//
+//    val router
+//        get() = cicerone.router
 
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        appComponent = DaggerAppComponent.builder()
+            .appModule(AppModule(this))
+            .build()
     }
 }
