@@ -13,5 +13,5 @@ abstract class BaseActivity<S : ScreenData, VM : BaseViewModel<S>> : AppCompatAc
         super.onCreate(savedInstanceState)
     }
 
-    abstract fun renderData( data : S )
+    abstract fun renderData(data: S)
 }

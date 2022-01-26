@@ -1,27 +1,33 @@
-package geekbrains.ru.translator.di
+package com.example.dictionary.di
 
 import com.example.dictionary.App
-import com.example.dictionary.di.AppModule
-import com.example.dictionary.di.CiceroneModule
-import com.example.dictionary.ui.activities.MainActivity
-import com.example.dictionary.ui.fragments.WordsDetailsFragment
 import dagger.Component
+import dagger.BindsInstance
+import android.app.Application
+import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 
 @Component(
     modules = [
-        AppModule::class,
         CiceroneModule::class,
         InteractorModule::class,
         RepositoryModule::class,
-        ViewModelModule::class]
+        ViewModelModule::class,
+        ActivityModule::class,
+        FragmentModule::class,
+        AndroidSupportInjectionModule::class]
 )
 @Singleton
 interface AppComponent {
-    fun inject(app: App)
 
-    fun inject(mainActivity: MainActivity)
-    fun inject(wordsDetailsFragment: WordsDetailsFragment)
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        fun application(application: Application): Builder
 
+        fun build(): AppComponent
+    }
+
+    fun inject(dictionary: App)
 }

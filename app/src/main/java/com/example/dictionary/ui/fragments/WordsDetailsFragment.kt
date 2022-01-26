@@ -1,5 +1,6 @@
 package com.example.dictionary.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,12 +20,15 @@ import com.example.dictionary.ui.base.BaseFragment
 import com.example.dictionary.ui.navigation.AndroidAppScreens
 import com.example.dictionary.ui.viewmodel.WordsDetailsFragmentViewModel
 import com.github.terrakok.cicerone.Router
+import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 
 class WordsDetailsFragment : BaseFragment<ScreenData, WordsDetailsFragmentViewModel>() {
     private var vb: FragmentWordsDetailsBinding? = null
     override lateinit var viewModel: WordsDetailsFragmentViewModel
+
+    @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
@@ -50,6 +54,11 @@ class WordsDetailsFragment : BaseFragment<ScreenData, WordsDetailsFragmentViewMo
         initAppBar()
         vb = it
     }.root
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -1,4 +1,4 @@
-package geekbrains.ru.translator.di
+package com.example.dictionary.di
 
 import com.example.dictionary.model.model.data.DataModel
 import com.example.dictionary.model.model.datasource.DataSource

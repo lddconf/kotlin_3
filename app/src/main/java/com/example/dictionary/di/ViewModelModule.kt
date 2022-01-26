@@ -1,11 +1,14 @@
-package geekbrains.ru.translator.di
+package com.example.dictionary.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.dictionary.ui.viewmodel.MainViewModel
 import com.example.dictionary.ui.viewmodel.WordsDetailsFragmentViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import geekbrains.ru.translator.di.ViewModelFactory
+import geekbrains.ru.translator.di.ViewModelKey
 
 @Module(includes = [InteractorModule::class])
 internal abstract class ViewModelModule {
@@ -17,4 +20,9 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(WordsDetailsFragmentViewModel::class)
     protected abstract fun wordsDetailsViewModel(wordsDetailsViewModel: WordsDetailsFragmentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainViewModel::class)
+    protected abstract fun mainViewModel(mainViewModel: MainViewModel): ViewModel
 }

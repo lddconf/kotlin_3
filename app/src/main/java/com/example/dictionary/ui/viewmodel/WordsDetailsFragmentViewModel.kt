@@ -7,12 +7,10 @@ import com.example.dictionary.model.model.datasource.DataSourceLocal
 import com.example.dictionary.model.model.datasource.DataSourceRemote
 import geekbrains.ru.translator.model.repository.RepositoryImplementation
 import io.reactivex.rxjava3.observers.DisposableObserver
+import javax.inject.Inject
 
-class WordsDetailsFragmentViewModel constructor(
-    private val interactor: WordsDetailsInteractor = WordsDetailsInteractor(
-        RepositoryImplementation(DataSourceRemote()),
-        RepositoryImplementation(DataSourceLocal())
-    )
+class WordsDetailsFragmentViewModel @Inject constructor(
+    private val interactor: WordsDetailsInteractor
 ) : BaseViewModel<ScreenData>() {
 
     val liveData: LiveData<ScreenData> = liveDataForViewToObserve
@@ -31,11 +29,6 @@ class WordsDetailsFragmentViewModel constructor(
         liveDataForViewToObserve.value = SInProgress(null)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
-    }
-
     private fun getObserver(): DisposableObserver<List<DataModel>> {
         return object : DisposableObserver<List<DataModel>>() {
 
@@ -52,7 +45,6 @@ class WordsDetailsFragmentViewModel constructor(
             }
         }
     }
-
 
 
 }
