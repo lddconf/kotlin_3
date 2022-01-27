@@ -62,7 +62,7 @@ class WordsDetailsFragment : BaseFragment<ScreenData, WordsDetailsFragmentViewMo
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory)[WordsDetailsFragmentViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[WordsDetailsFragmentViewModel::class.java]
         viewModel.liveData.observe(viewLifecycleOwner, Observer {
             renderData(it)
         })
