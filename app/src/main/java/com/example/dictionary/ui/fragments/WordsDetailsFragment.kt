@@ -1,6 +1,5 @@
 package com.example.dictionary.ui.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.dictionary.App
 import com.example.dictionary.R
 import com.example.dictionary.databinding.FragmentWordsDetailsBinding
 import com.example.dictionary.model.model.data.*
 import com.example.dictionary.model.navigation.IDictionaryAppScreens
 import com.example.dictionary.ui.adapters.ResultListRVAdapter
 import com.example.dictionary.ui.base.BaseFragment
-import com.example.dictionary.ui.navigation.AndroidAppScreens
 import com.example.dictionary.ui.viewmodel.WordsDetailsFragmentViewModel
 import com.github.terrakok.cicerone.Router
 import dagger.android.support.AndroidSupportInjection
@@ -51,14 +48,10 @@ class WordsDetailsFragment : BaseFragment<ScreenData, WordsDetailsFragmentViewMo
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = FragmentWordsDetailsBinding.inflate(inflater, container, false).also {
+        AndroidSupportInjection.inject(this)
         initAppBar()
         vb = it
     }.root
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -108,13 +101,19 @@ class WordsDetailsFragment : BaseFragment<ScreenData, WordsDetailsFragmentViewMo
     private fun initRV() {
         vb?.resultListRv?.layoutManager = LinearLayoutManager(requireContext())
         adapter = ResultListRVAdapter(itemClickListener = {
-            adapter?.words?.get(it.pos)?.text ?: "Empty"
+            doOnItemClick(adapter?.words?.get(it.pos))
         })
         vb?.resultListRv?.adapter = adapter
     }
 
     private fun showData(data: List<DataModel>) {
+        adapter?.words?.clear()
+        adapter?.words?.addAll(data)
+        wordsListChanged(data.size)
+    }
 
+    private fun doOnItemClick(dataModel: DataModel?) {
+        Toast.makeText(requireContext(), dataModel?.text ?: "Empty", Toast.LENGTH_SHORT).show()
     }
 
     private fun showWordSearchDialog() {
@@ -172,6 +171,7 @@ class WordsDetailsFragment : BaseFragment<ScreenData, WordsDetailsFragmentViewMo
         successLayout.visibility = View.VISIBLE
         loadingFrameLayout.visibility = View.GONE
         errorLinearLayout.visibility = View.GONE
+        welcomeTextview.visibility = View.GONE
     }
 
 
@@ -186,7 +186,4 @@ class WordsDetailsFragment : BaseFragment<ScreenData, WordsDetailsFragmentViewMo
         loadingFrameLayout.visibility = View.GONE
         errorLinearLayout.visibility = View.VISIBLE
     }
-
-
-
 }

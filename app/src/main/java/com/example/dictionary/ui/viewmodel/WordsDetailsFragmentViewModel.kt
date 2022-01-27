@@ -45,6 +45,4 @@ class WordsDetailsFragmentViewModel @Inject constructor(
             }
         }
     }
-
-
 }
