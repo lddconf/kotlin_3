@@ -1,5 +1,6 @@
 package com.example.dictionary.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dictionary.R
 import com.example.dictionary.databinding.FragmentWordsDetailsBinding
@@ -29,11 +31,10 @@ class WordsDetailsFragment : BaseFragment<ScreenData, WordsDetailsFragmentViewMo
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    lateinit var screens : IDictionaryAppScreens
+    lateinit var screens: IDictionaryAppScreens
 
     @Inject
     lateinit var router: Router
-
 
     private var adapter: ResultListRVAdapter? = null
 
@@ -49,26 +50,25 @@ class WordsDetailsFragment : BaseFragment<ScreenData, WordsDetailsFragmentViewMo
         savedInstanceState: Bundle?
     ): View = FragmentWordsDetailsBinding.inflate(inflater, container, false).also {
         AndroidSupportInjection.inject(this)
-        initAppBar()
         vb = it
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAppBar()
-        initSearchFAB()
         initRV()
+        initSearchFAB()
         initViewModel()
     }
 
     private fun initViewModel() {
-        viewModel = viewModelFactory.create(WordsDetailsFragmentViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[WordsDetailsFragmentViewModel::class.java]
         viewModel.liveData.observe(viewLifecycleOwner, Observer {
             renderData(it)
         })
     }
 
-    override fun renderData(data: ScreenData) = when(data) {
+    override fun renderData(data: ScreenData) = when (data) {
         is SSuccess<*> -> {
             val list = data.data as List<DataModel>
             showData(list)
@@ -169,20 +169,21 @@ class WordsDetailsFragment : BaseFragment<ScreenData, WordsDetailsFragmentViewMo
 
     private fun showViewSuccess() = vb?.apply {
         successLayout.visibility = View.VISIBLE
+        welcomeTextview.visibility = View.GONE
         loadingFrameLayout.visibility = View.GONE
         errorLinearLayout.visibility = View.GONE
-        welcomeTextview.visibility = View.GONE
     }
-
 
     private fun showViewLoading() = vb?.apply {
         successLayout.visibility = View.GONE
+        //welcomeTextview.visibility = View.GONE
         loadingFrameLayout.visibility = View.VISIBLE
         errorLinearLayout.visibility = View.GONE
     }
 
     private fun showViewError() = vb?.apply {
         successLayout.visibility = View.GONE
+        //welcomeTextview.visibility = View.GONE
         loadingFrameLayout.visibility = View.GONE
         errorLinearLayout.visibility = View.VISIBLE
     }

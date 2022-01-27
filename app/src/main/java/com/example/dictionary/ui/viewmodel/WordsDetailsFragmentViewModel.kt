@@ -1,6 +1,7 @@
 package com.example.dictionary.ui.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.dictionary.model.interactors.WordsDetailsInteractor
 import com.example.dictionary.model.model.data.*
 import com.example.dictionary.model.model.datasource.DataSourceLocal
@@ -41,8 +42,10 @@ class WordsDetailsFragmentViewModel @Inject constructor(
             }
 
             override fun onComplete() {
-                liveDataForViewToObserve.value = SComplete
+            //    liveDataForViewToObserve.value = SComplete
             }
         }
     }
+
+
 }
