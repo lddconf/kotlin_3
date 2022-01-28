@@ -3,6 +3,7 @@ package com.example.dictionary.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.dictionary.ui.viewmodel.MainViewModel
+import com.example.dictionary.ui.viewmodel.SettingsViewModel
 import com.example.dictionary.ui.viewmodel.WordsDetailsFragmentViewModel
 import dagger.Binds
 import dagger.Module
@@ -25,4 +26,9 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     protected abstract fun mainViewModel(mainViewModel: MainViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainViewModel::class)
+    protected abstract fun settingsViewModel(settingsViewModel: SettingsViewModel): ViewModel
 }

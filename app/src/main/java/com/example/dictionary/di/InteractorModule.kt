@@ -15,4 +15,6 @@ class InteractorModule {
         @Named(NAME_REMOTE) repositoryRemote: Repository<List<DataModel>>,
         @Named(NAME_LOCAL) repositoryLocal: Repository<List<DataModel>>
     ) = WordsDetailsInteractor(repositoryRemote, repositoryLocal)
+
+
 }

@@ -7,7 +7,7 @@ import com.example.dictionary.model.model.data.ScreenData
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val interactor: WordsDetailsInteractor
+    private val interactor: Unit
 ) : BaseViewModel<ScreenData>() {
     val liveData: LiveData<ScreenData> = liveDataForViewToObserve
 
