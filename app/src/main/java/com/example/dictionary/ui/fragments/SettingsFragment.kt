@@ -1,19 +1,15 @@
 package com.example.dictionary.ui.fragments
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LiveData
-import com.example.dictionary.R
-import com.example.dictionary.databinding.FragmentSearchDialogBinding
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.dictionary.databinding.SettingsFragmentBinding
 import com.example.dictionary.model.model.data.ScreenData
 import com.example.dictionary.ui.base.BaseFragment
 import com.example.dictionary.ui.viewmodel.SettingsViewModel
-import com.example.dictionary.ui.viewmodel.WordsDetailsFragmentViewModel
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 

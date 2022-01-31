@@ -29,6 +29,6 @@ internal abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MainViewModel::class)
+    @ViewModelKey(SettingsViewModel::class)
     protected abstract fun settingsViewModel(settingsViewModel: SettingsViewModel): ViewModel
 }

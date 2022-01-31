@@ -4,4 +4,5 @@ import com.github.terrakok.cicerone.Screen
 
 interface IDictionaryAppScreens {
     fun searchResultsWindow(): Screen
+    fun settingsWindow(): Screen
 }

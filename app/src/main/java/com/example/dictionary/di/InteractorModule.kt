@@ -1,5 +1,6 @@
 package com.example.dictionary.di
 
+import com.example.dictionary.model.interactors.SettingsInteractor
 import com.example.dictionary.model.interactors.WordsDetailsInteractor
 import com.example.dictionary.model.model.data.DataModel
 import com.example.dictionary.model.model.repository.Repository
@@ -16,5 +17,7 @@ class InteractorModule {
         @Named(NAME_LOCAL) repositoryLocal: Repository<List<DataModel>>
     ) = WordsDetailsInteractor(repositoryRemote, repositoryLocal)
 
+    @Provides
+    internal fun provideSettingsInteractor() = SettingsInteractor()
 
 }
