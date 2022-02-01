@@ -4,14 +4,25 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dictionary.databinding.FragmentSearchResultListRvItemBinding
-import com.example.dictionary.mvp.model.data.DataModel
-import com.example.dictionary.mvp.presenter.list.IWordDetails
-import com.example.dictionary.mvp.presenter.list.IWordsDetailsListPresenter
+import com.example.dictionary.model.model.data.DataModel
+import com.example.dictionary.ui.adapters.helpers.DictionaryWordDetailsHelper
+import com.example.dictionary.ui.adapters.helpers.IWordDetails
+import com.example.dictionary.ui.adapters.helpers.IWordsDetailsListHelper
 
 class ResultListRVAdapter(
-    val presenter: IWordsDetailsListPresenter
+    val words: MutableList<DataModel> = mutableListOf(),
+    private val itemClickListener: ((ResultListRVAdapter.RecyclerItemViewHolder) -> Unit)?,
+    private val dataHolder: IWordsDetailsListHelper = DictionaryWordDetailsHelper(words).also {
+        it.itemClickListener = itemClickListener
+    }
 ) :
     RecyclerView.Adapter<ResultListRVAdapter.RecyclerItemViewHolder>() {
+
+    fun setData(newWords: List<DataModel>) {
+        words.clear()
+        words.addAll(newWords)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerItemViewHolder =
         RecyclerItemViewHolder(
@@ -22,18 +33,18 @@ class ResultListRVAdapter(
             )
         ).apply {
             itemView.setOnClickListener {
-                presenter.itemClickListener?.invoke(this)
+                dataHolder.itemClickListener?.invoke(this)
             }
         }
 
     override fun onBindViewHolder(holder: RecyclerItemViewHolder, position: Int) {
-        presenter.bindView(holder.apply {
+        dataHolder.bindView(holder.apply {
             pos = position
         })
     }
 
     override fun getItemCount(): Int {
-        return presenter.getCount()
+        return dataHolder.getCount()
     }
 
     inner class RecyclerItemViewHolder(val vb: FragmentSearchResultListRvItemBinding) :

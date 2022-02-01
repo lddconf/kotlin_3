@@ -1,31 +1,41 @@
 package com.example.dictionary.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.dictionary.App
 import com.example.dictionary.R
 import com.example.dictionary.databinding.FragmentWordsDetailsBinding
-import com.example.dictionary.mvp.presenter.Presenter
-import com.example.dictionary.mvp.presenter.WordsDetailsFragmentPresenter
-import com.example.dictionary.mvp.views.IWordsDetailsView
+import com.example.dictionary.model.model.data.*
+import com.example.dictionary.model.navigation.IDictionaryAppScreens
 import com.example.dictionary.ui.adapters.ResultListRVAdapter
 import com.example.dictionary.ui.base.BaseFragment
-import com.example.dictionary.ui.navigation.AndroidAppScreens
-import geekbrains.ru.translator.rx.SchedulerProvider
+import com.example.dictionary.ui.viewmodel.WordsDetailsFragmentViewModel
+import com.github.terrakok.cicerone.Router
+import dagger.android.support.AndroidSupportInjection
+import javax.inject.Inject
 
 
-class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsView {
+class WordsDetailsFragment : BaseFragment<ScreenData, WordsDetailsFragmentViewModel>() {
     private var vb: FragmentWordsDetailsBinding? = null
+    override lateinit var viewModel: WordsDetailsFragmentViewModel
 
-    private val router = App.instance.router
-    private val screens = AndroidAppScreens()
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var presenter: WordsDetailsFragmentPresenter
+    @Inject
+    lateinit var screens: IDictionaryAppScreens
+
+    @Inject
+    lateinit var router: Router
+
     private var adapter: ResultListRVAdapter? = null
 
     companion object {
@@ -39,23 +49,36 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = FragmentWordsDetailsBinding.inflate(inflater, container, false).also {
-        initAppBar()
+        AndroidSupportInjection.inject(this)
         vb = it
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAppBar()
-        initSearchFAB()
         initRV()
+        initSearchFAB()
+        initViewModel()
     }
 
-    override fun createPresenter(): Presenter<IWordsDetailsView> =
-        WordsDetailsFragmentPresenter(router, screens, SchedulerProvider()).also {
-            presenter = it
-        }
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[WordsDetailsFragmentViewModel::class.java]
+        viewModel.liveData.observe(viewLifecycleOwner, Observer {
+            renderData(it)
+        })
+    }
 
-    override fun showMessage(text: String) {
+    override fun renderData(data: ScreenData) = when (data) {
+        is SSuccess<*> -> {
+            val list = data.data as List<DataModel>
+            showData(list)
+        }
+        is SInProgress -> showLoading(data.progress)
+        is SError -> showError(data.exception)
+        else -> Unit
+    }
+
+    fun showMessage(text: String) {
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
@@ -77,8 +100,20 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
 
     private fun initRV() {
         vb?.resultListRv?.layoutManager = LinearLayoutManager(requireContext())
-        adapter = ResultListRVAdapter(presenter.wordsListPresenter)
+        adapter = ResultListRVAdapter(itemClickListener = {
+            doOnItemClick(adapter?.words?.get(it.pos))
+        })
         vb?.resultListRv?.adapter = adapter
+    }
+
+    private fun showData(data: List<DataModel>) {
+        adapter?.words?.clear()
+        adapter?.words?.addAll(data)
+        wordsListChanged(data.size)
+    }
+
+    private fun doOnItemClick(dataModel: DataModel?) {
+        Toast.makeText(requireContext(), dataModel?.text ?: "Empty", Toast.LENGTH_SHORT).show()
     }
 
     private fun showWordSearchDialog() {
@@ -86,7 +121,7 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
         searchDialogFragment.setOnSearchClickListener(object :
             BottomSearchDialogFragment.OnSearchClickListener {
             override fun onClick(searchWord: String) {
-                presenter.translate(searchWord, true)
+                viewModel.translate(searchWord, true)
             }
         })
         searchDialogFragment.show(
@@ -95,7 +130,7 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
         )
     }
 
-    override fun wordsListChanged(size: Int) {
+    private fun wordsListChanged(size: Int) {
         if (size == 0) {
             showErrorScreen(getString(R.string.empty_server_response_on_success))
         } else {
@@ -104,7 +139,7 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
         }
     }
 
-    override fun showLoading(progress: Int?) {
+    private fun showLoading(progress: Int?) {
         showViewLoading()
         progress?.let {
             vb?.apply {
@@ -118,7 +153,7 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
         }
     }
 
-    override fun showError(error: Throwable) {
+    private fun showError(error: Throwable) {
         showErrorScreen(error.message)
     }
 
@@ -127,26 +162,28 @@ class WordsDetailsFragment : BaseFragment<IWordsDetailsView>(), IWordsDetailsVie
         vb?.apply {
             errorTextview.text = error ?: getString(R.string.undefined_error)
             reloadButton.setOnClickListener {
-                presenter.translate("hi", true)
+                viewModel.translate("hi", true)
             }
         }
     }
 
     private fun showViewSuccess() = vb?.apply {
         successLayout.visibility = View.VISIBLE
+        welcomeTextview.visibility = View.GONE
         loadingFrameLayout.visibility = View.GONE
         errorLinearLayout.visibility = View.GONE
     }
 
-
     private fun showViewLoading() = vb?.apply {
         successLayout.visibility = View.GONE
+        //welcomeTextview.visibility = View.GONE
         loadingFrameLayout.visibility = View.VISIBLE
         errorLinearLayout.visibility = View.GONE
     }
 
     private fun showViewError() = vb?.apply {
         successLayout.visibility = View.GONE
+        //welcomeTextview.visibility = View.GONE
         loadingFrameLayout.visibility = View.GONE
         errorLinearLayout.visibility = View.VISIBLE
     }
