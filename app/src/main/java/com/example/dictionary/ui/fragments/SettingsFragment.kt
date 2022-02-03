@@ -48,6 +48,8 @@ class SettingsFragment : BaseFragment<ScreenData, SettingsViewModel>() {
         })
     }
 
+
+
     override fun renderData(data: ScreenData) = when (data) {
         is SSuccess<*> -> {
             val settings = data.data as SettingsHolder
