@@ -8,6 +8,7 @@ import com.example.dictionary.databinding.ActivityMainBinding
 import com.example.dictionary.model.model.data.SComplete
 import com.example.dictionary.model.model.data.SSuccess
 import com.example.dictionary.model.model.data.ScreenData
+import com.example.dictionary.model.model.data.settings.SettingsHolder
 import com.example.dictionary.model.navigation.IDictionaryAppScreens
 import com.example.dictionary.ui.base.BaseActivity
 import com.example.dictionary.ui.viewmodel.MainViewModel
@@ -67,9 +68,16 @@ class MainActivity : BaseActivity<ScreenData, MainViewModel>() {
 
     override fun renderData(data: ScreenData) = when (data) {
         is SSuccess<*>-> { //Setup new screen
-
+            when (data.data) {
+                is SettingsHolder -> showSettings(data.data)
+                else -> Unit
+            }
         }
         is SComplete -> router.replaceScreen(screens.searchResultsWindow())
-        else -> return
+        else -> Unit
+    }
+
+    private fun showSettings(settings : SettingsHolder) {
+
     }
 }
