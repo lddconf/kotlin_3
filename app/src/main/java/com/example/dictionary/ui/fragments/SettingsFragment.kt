@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.dictionary.databinding.SettingsFragmentBinding
-import com.example.dictionary.model.model.data.ScreenData
+import com.example.dictionary.model.model.data.*
+import com.example.dictionary.model.model.data.settings.SettingsHolder
 import com.example.dictionary.ui.base.BaseFragment
 import com.example.dictionary.ui.viewmodel.SettingsViewModel
 import dagger.android.support.AndroidSupportInjection
@@ -40,13 +41,28 @@ class SettingsFragment : BaseFragment<ScreenData, SettingsViewModel>() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[SettingsViewModel::class.java]
+        viewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[SettingsViewModel::class.java]
         viewModel.liveData.observe(viewLifecycleOwner, Observer {
             renderData(it)
         })
     }
 
-    override fun renderData(data: ScreenData) {
-        TODO("Not yet implemented")
+    override fun renderData(data: ScreenData) = when (data) {
+        is SSuccess<*> -> {
+            val settings = data.data as SettingsHolder
+            showData(settings)
+        }
+        is SError -> showError(data.exception)
+        else -> Unit
     }
+
+    private fun showData(settingsHolder: SettingsHolder) {
+
+    }
+
+    private fun showError(error: Throwable) {
+
+    }
+
 }

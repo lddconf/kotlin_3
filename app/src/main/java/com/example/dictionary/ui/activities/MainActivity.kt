@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.dictionary.R
 import com.example.dictionary.databinding.ActivityMainBinding
 import com.example.dictionary.model.model.data.SComplete
+import com.example.dictionary.model.model.data.SSuccess
 import com.example.dictionary.model.model.data.ScreenData
 import com.example.dictionary.model.navigation.IDictionaryAppScreens
 import com.example.dictionary.ui.base.BaseActivity
@@ -14,6 +15,7 @@ import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import dagger.android.AndroidInjection
+import java.lang.Error
 import javax.inject.Inject
 
 class MainActivity : BaseActivity<ScreenData, MainViewModel>() {
@@ -63,10 +65,11 @@ class MainActivity : BaseActivity<ScreenData, MainViewModel>() {
         navigationHolder.removeNavigator()
     }
 
-    override fun renderData(data: ScreenData) {
-        when (data) {
-            is SComplete -> router.navigateTo(screens.searchResultsWindow())
-            else -> return
+    override fun renderData(data: ScreenData) = when (data) {
+        is SSuccess<*>-> { //Setup new screen
+
         }
+        is SComplete -> router.replaceScreen(screens.searchResultsWindow())
+        else -> return
     }
 }
