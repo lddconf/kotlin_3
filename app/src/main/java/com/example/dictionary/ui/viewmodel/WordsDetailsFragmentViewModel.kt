@@ -1,12 +1,8 @@
 package com.example.dictionary.ui.viewmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.dictionary.model.interactors.WordsDetailsInteractor
 import com.example.dictionary.model.model.data.*
-import com.example.dictionary.model.model.datasource.DataSourceLocal
-import com.example.dictionary.model.model.datasource.DataSourceRemote
-import geekbrains.ru.translator.model.repository.RepositoryImplementation
 import io.reactivex.rxjava3.observers.DisposableObserver
 import javax.inject.Inject
 

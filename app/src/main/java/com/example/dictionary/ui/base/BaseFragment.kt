@@ -2,6 +2,7 @@ package com.example.dictionary.ui.base
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.example.dictionary.model.model.data.AppScreens
 import com.example.dictionary.model.model.data.ScreenData
 import com.example.dictionary.ui.viewmodel.BaseViewModel
 

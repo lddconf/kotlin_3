@@ -1,13 +1,14 @@
 package com.example.dictionary.ui.activities
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.dictionary.R
 import com.example.dictionary.databinding.ActivityMainBinding
-import com.example.dictionary.model.model.data.SComplete
-import com.example.dictionary.model.model.data.SSuccess
-import com.example.dictionary.model.model.data.ScreenData
+import com.example.dictionary.model.model.data.*
 import com.example.dictionary.model.model.data.settings.SettingsHolder
 import com.example.dictionary.model.navigation.IDictionaryAppScreens
 import com.example.dictionary.ui.base.BaseActivity
@@ -16,10 +17,9 @@ import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import dagger.android.AndroidInjection
-import java.lang.Error
 import javax.inject.Inject
 
-class MainActivity : BaseActivity<ScreenData, MainViewModel>() {
+class MainActivity : BaseActivity<AppScreens, MainViewModel>() {
     private lateinit var binding: ActivityMainBinding
 
     @Inject
@@ -45,6 +45,8 @@ class MainActivity : BaseActivity<ScreenData, MainViewModel>() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initAppBar()
+
 
         viewModel = viewModelFactory.create(MainViewModel::class.java)
         subscribeToViewModel()
@@ -66,18 +68,51 @@ class MainActivity : BaseActivity<ScreenData, MainViewModel>() {
         navigationHolder.removeNavigator()
     }
 
-    override fun renderData(data: ScreenData) = when (data) {
-        is SSuccess<*>-> { //Setup new screen
-            when (data.data) {
-                is SettingsHolder -> showSettings(data.data)
-                else -> Unit
-            }
-        }
-        is SComplete -> router.replaceScreen(screens.searchResultsWindow())
-        else -> Unit
+    private fun initAppBar() {
+        setSupportActionBar(binding.mainToolbar)
+        supportActionBar?.title = getString(R.string.app_name)
     }
 
-    private fun showSettings(settings : SettingsHolder) {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        android.R.id.home -> {
+            onBackPressed()
+            true
+        }
+        R.id.action_settings -> {
+            viewModel.loadSettings()
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item);
+            false
+        }
+    }
+
+    override fun renderData(data: AppScreens) = when (data) {
+        is SettingsWindow -> navigateToSettings()
+        is DictionaryWindow -> showDictionaryBaseWindow()
+    }
+
+    private fun navigateToSettings() {
+       // hideMainAppBar()
+        router.navigateTo(screens.settingsWindow())
+    }
+
+    private fun showDictionaryBaseWindow() {
+       // showMainAppBar()
+        router.replaceScreen(screens.searchResultsWindow())
+    }
+
+    private fun hideMainAppBar() {
+        binding.appBarLayoutId.visibility = View.GONE
+    }
+
+    private fun showMainAppBar() {
+        binding.appBarLayoutId.visibility = View.VISIBLE
     }
 }
